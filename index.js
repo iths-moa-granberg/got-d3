@@ -16,23 +16,24 @@ const fetchData = async () => {
 
 const getColor = rating => {
   const num = Number(rating);
-  return num >= 9 ? 'darkgreen' : num >= 8 ? 'green' : num >= 7 ? 'yellow' : 'red';
+  // return `rgb(${(255 * (10 - num)) / 10}, ${(255 * num) / 10}, 0)`;
+  return num >= 9 ? 'darkgreen' : num >= 8 ? 'green' : num >= 7 ? 'yellow' : num >= 5 ? 'red' : 'darkred';
 };
 
-const width = 600;
-const height = 600;
-const margin = 60;
-const chartWidth = width - margin * 2;
-const chartHeight = height - margin * 2;
+const renderColorChart = () => {
+  const width = 600;
+  const height = 600;
+  const margin = 60;
+  const chartWidth = width - margin * 2;
+  const chartHeight = height - margin * 2;
 
-const svg = d3.select('.container').append('svg').attr('width', width).attr('height', height);
-const chart = svg.append('g').attr('class', 'chart').attr('transform', `translate(${margin},${margin})`);
-const axesGroup = chart.append('g').attr('class', 'axes');
-const topAxisGroup = axesGroup.append('g').attr('class', 'top-axis');
-const leftAxisGroup = axesGroup.append('g').attr('class', 'left-axis');
-const episodeGroup = chart.append('g').attr('class', 'episodes');
+  const svg = d3.select('.container').append('svg').attr('width', width).attr('height', height);
+  const chart = svg.append('g').attr('class', 'chart').attr('transform', `translate(${margin},${margin})`);
+  const axesGroup = chart.append('g').attr('class', 'axes');
+  const topAxisGroup = axesGroup.append('g').attr('class', 'top-axis');
+  const leftAxisGroup = axesGroup.append('g').attr('class', 'left-axis');
+  const episodeGroup = chart.append('g').attr('class', 'episodes');
 
-const render = () => {
   const xScale = d3
     .scaleBand()
     .domain(data.map(episode => episode.season))
@@ -84,6 +85,5 @@ const render = () => {
 (async () => {
   createDataUrls();
   await fetchData();
-  console.log(data);
-  render();
+  renderColorChart();
 })();
