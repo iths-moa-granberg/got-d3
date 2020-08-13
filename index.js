@@ -14,6 +14,11 @@ const fetchData = async () => {
   data = result.map(s => s.Episodes.map(e => ({ ...e, season: s.Season }))).flat();
 };
 
+const getColor = rating => {
+  const num = Number(rating);
+  return num >= 9 ? 'darkgreen' : num >= 8 ? 'green' : num >= 7 ? 'yellow' : 'red';
+};
+
 const width = 600;
 const height = 600;
 const margin = 60;
@@ -25,7 +30,7 @@ const chart = svg.append('g').attr('class', 'chart').attr('transform', `translat
 const axesGroup = chart.append('g').attr('class', 'axes');
 const topAxisGroup = axesGroup.append('g').attr('class', 'top-axis');
 const leftAxisGroup = axesGroup.append('g').attr('class', 'left-axis');
-const squareGroup = chart.append('g').attr('class', 'squares');
+const episodeGroup = chart.append('g').attr('class', 'episodes');
 
 const render = () => {
   const xScale = d3
@@ -44,16 +49,23 @@ const render = () => {
   const leftAxis = d3.axisLeft(yScale);
   leftAxis(leftAxisGroup);
 
-  const squares = squareGroup.selectAll('rect').data(data);
+  const episode = episodeGroup.selectAll('g').data(data).enter().append('g');
 
-  squares
-    .enter()
+  episode
     .append('rect')
-    .attr('height', 60)
+    .attr('height', 48)
     .attr('width', 60)
+    .attr('fill', episode => getColor(episode.imdbRating))
+    .attr('stroke', 'white')
     .attr('x', episode => xScale(episode.season))
-    .attr('y', episode => yScale(episode.Episode))
-    .attr('fill', 'grey');
+    .attr('y', episode => yScale(episode.Episode));
+
+  episode
+    .append('text')
+    .attr('x', episode => xScale(episode.season) + 48 / 2 + 5)
+    .attr('y', episode => yScale(episode.Episode) + 65 / 2)
+    .attr('text-anchor', 'middle')
+    .text(episode => episode.imdbRating);
 };
 
 (async () => {
