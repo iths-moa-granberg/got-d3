@@ -11,6 +11,7 @@ const renderColorChart = () => {
   const chartWidth = width - margin * 2;
   const chartHeight = height - margin * 2;
 
+  //groups with classes & transforming into place
   const svg = d3.select('.container').append('svg').attr('width', width).attr('height', height);
   const chart = svg.append('g').attr('class', 'chart').attr('transform', `translate(${margin},${margin})`);
   const axesGroup = chart.append('g').attr('class', 'axes');
@@ -18,6 +19,7 @@ const renderColorChart = () => {
   const leftAxisGroup = axesGroup.append('g').attr('class', 'left-axis');
   const episodeGroup = chart.append('g').attr('class', 'episodes');
 
+  //x-scale
   const xScale = d3
     .scaleBand()
     .domain(data.map(episode => episode.season))
@@ -26,6 +28,7 @@ const renderColorChart = () => {
   const topAxis = d3.axisTop(xScale);
   topAxis(topAxisGroup);
 
+  //y-scale
   const yScale = d3
     .scaleBand()
     .domain(data.map(episode => episode.Episode))
@@ -34,6 +37,7 @@ const renderColorChart = () => {
   const leftAxis = d3.axisLeft(yScale);
   leftAxis(leftAxisGroup);
 
+  //episode-boxes
   const episode = episodeGroup.selectAll('g').data(data).enter().append('g');
 
   episode
@@ -52,6 +56,7 @@ const renderColorChart = () => {
     .attr('text-anchor', 'middle')
     .text(episode => episode.imdbRating);
 
+  //labels
   svg
     .append('text')
     .text('Season')

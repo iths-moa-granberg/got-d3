@@ -5,6 +5,7 @@ const renderLineChart = () => {
   const chartWidth = width - margin * 2;
   const chartHeight = height - margin * 2;
 
+  //groups with classes & transforming into place
   const svg = d3.select('.container2').append('svg').attr('width', width).attr('height', height);
   const chart = svg.append('g').attr('class', 'chart').attr('transform', `translate(${margin},${margin})`);
   const axesGroup = chart.append('g').attr('class', 'axes');
@@ -15,27 +16,27 @@ const renderLineChart = () => {
   const leftAxisGroup = axesGroup.append('g').attr('class', 'left-axis');
   const linesGroup = chart.append('g').attr('class', 'lines');
 
+  //x-scale
   const xScale = d3.scaleLinear().domain([0, data.length]).range([0, chartWidth]);
 
   const bottomAxis = d3.axisBottom(xScale);
   bottomAxis(bottomAxisGroup);
 
+  //y-scale
   const yScale = d3.scaleLinear().domain([10, 0]).range([0, chartHeight]);
 
   const leftAxis = d3.axisLeft(yScale);
   leftAxis(leftAxisGroup);
 
+  //line
   const line = d3
     .line()
     .x(d => xScale(data.indexOf(d)))
     .y(d => yScale(d.imdbRating));
 
-  const path = linesGroup
-    .append('path')
-    .attr('stroke', 'black')
-    .attr('d', line(data))
-    .attr('fill', 'none');
+  const path = linesGroup.append('path').attr('stroke', 'black').attr('d', line(data)).attr('fill', 'none');
 
+  //line animation
   const totalLength = path.node().getTotalLength();
 
   path
@@ -49,6 +50,7 @@ const renderLineChart = () => {
     .duration(3000)
     .attr('stroke', 'steelblue');
 
+  //area with animation
   const area = d3
     .area()
     .x(d => xScale(data.indexOf(d)))
@@ -65,6 +67,7 @@ const renderLineChart = () => {
     .delay(5000)
     .attr('opacity', 1);
 
+  //labels
   svg
     .append('text')
     .text('Episode')
