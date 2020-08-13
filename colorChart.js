@@ -4,6 +4,18 @@ const getColor = rating => {
   return num >= 9 ? 'darkgreen' : num >= 8 ? 'green' : num >= 7 ? 'yellow' : num >= 5 ? 'red' : 'darkred';
 };
 
+function handleMouseOver(episode) {
+  d3.select(this).select('text').transition().duration(200).attr('fill', 'white');
+  
+  d3.select('.info').transition().duration(200).style('opacity', 1).text(episode.Title);
+}
+
+function handleMouseOut() {
+  d3.select(this).select('text').transition().duration(200).attr('fill', 'black');
+
+  d3.select('.info').transition().duration(200).style('opacity', 0).text('');
+}
+
 const renderColorChart = () => {
   const width = 600;
   const height = 600;
@@ -38,7 +50,13 @@ const renderColorChart = () => {
   leftAxis(leftAxisGroup);
 
   //episode-boxes
-  const episode = episodeGroup.selectAll('g').data(data).enter().append('g');
+  const episode = episodeGroup
+    .selectAll('g')
+    .data(data)
+    .enter()
+    .append('g')
+    .on('mouseover', handleMouseOver)
+    .on('mouseout', handleMouseOut);
 
   episode
     .append('rect')
@@ -54,6 +72,7 @@ const renderColorChart = () => {
     .attr('x', episode => xScale(episode.season) + 48 / 2 + 5)
     .attr('y', episode => yScale(episode.Episode) + 65 / 2)
     .attr('text-anchor', 'middle')
+    .attr('fill', 'black')
     .text(episode => episode.imdbRating);
 
   //labels
