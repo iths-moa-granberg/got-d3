@@ -30,14 +30,40 @@ const renderLineChart = () => {
     .x(d => xScale(data.indexOf(d)))
     .y(d => yScale(d.imdbRating));
 
+  const path = linesGroup
+    .append('path')
+    .attr('stroke', 'black')
+    .attr('d', line(data))
+    .attr('fill', 'none');
+
+  const totalLength = path.node().getTotalLength();
+
+  path
+    .attr('stroke-dasharray', totalLength + ' ' + totalLength)
+    .attr('stroke-dashoffset', totalLength)
+    .transition()
+    .duration(5000)
+    .ease(d3.easeLinear)
+    .attr('stroke-dashoffset', 0)
+    .transition()
+    .duration(3000)
+    .attr('stroke', 'steelblue');
+
   const area = d3
     .area()
     .x(d => xScale(data.indexOf(d)))
     .y0(chartHeight)
     .y1(d => yScale(d.imdbRating));
 
-  linesGroup.append('path').attr('stroke', 'steelblue').attr('d', line(data)).attr('fill', 'none');
-  linesGroup.append('path').attr('d', area(data)).attr('fill', 'lightsteelblue');
+  linesGroup
+    .append('path')
+    .attr('d', area(data))
+    .attr('fill', 'lightsteelblue')
+    .attr('opacity', 0)
+    .transition()
+    .duration(3000)
+    .delay(5000)
+    .attr('opacity', 1);
 
   svg
     .append('text')
