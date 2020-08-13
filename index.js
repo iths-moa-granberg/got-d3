@@ -66,6 +66,19 @@ const render = () => {
     .attr('y', episode => yScale(episode.Episode) + 65 / 2)
     .attr('text-anchor', 'middle')
     .text(episode => episode.imdbRating);
+
+  svg
+    .append('text')
+    .text('Season')
+    .attr('x', chartWidth / 2 + margin / 2)
+    .attr('y', margin / 2);
+
+  svg
+    .append('text')
+    .text('Episode')
+    .attr('x', -(chartHeight / 2 + margin))
+    .attr('y', margin / 2)
+    .attr('transform', 'rotate(-90)');
 };
 
 (async () => {
